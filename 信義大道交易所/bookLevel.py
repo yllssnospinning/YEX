@@ -1,3 +1,5 @@
+from order import Order
+
 class lobLevel:
     def __init__(self, tick, tickSize):
         self.bids, self.asks = [], []
@@ -19,7 +21,19 @@ class lobLevel:
         orderSturct = self.bids if side == 1 else self.asks
         totalQty = float(quantity)
         for order in orderSturct:
-            qtyToFill = min(order.qty, quantity)
+            qtyToFill = min(order.qty, totalQty)
             if quantity > 0:
                 order.qty = order.qty - qtyToFill
-    
+            totalQty -= qtyToFill
+            print('Debug: Filled', order.traderID, qtyToFill, totalQty)
+            if totalQty == 0:
+                break
+
+test = lobLevel(10, 1)
+test.addOrder(Order(1, 'Hairo', 10, 10, 1))
+test.addOrder(Order(2, 'Lychee', 10, 5, 1))
+test.addOrder(Order(3, 'CYM', 10,  2, 1))
+test.addOrder(Order(4, 'Bosco', 10, 0.5, 1))
+print(test.bids)
+print(test.asks)
+test.fillOrders(1, 11)
