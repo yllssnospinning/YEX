@@ -42,6 +42,7 @@ class orderBook:
         bestAsk = 'null' if len(askLevels) == 0 else askLevels[0]
         return bestBid, bestAsk
     
+    # TODO
     @property
     def aggressingMarketOrder(self):
         buySideAggressing, sellSideAggressing = False, False
@@ -53,6 +54,7 @@ class orderBook:
             buySideAggressing = True
         if mktLimits[1] < bbo[0]:
             sellSideAggressing = True
+        # TODO
         
 
     def fillOrder(self):
