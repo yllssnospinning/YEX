@@ -28,34 +28,48 @@ class orderBook:
 
     @property
     def bestBidAsk(self):
-        bidLevels = self.lob[1].keys
-        askLevels = self.lob[0].keys
+        bidLevels = list(self.lob[1].keys())
+        askLevels = list(self.lob[0].keys())
         bestBid = 'null' if len(bidLevels) == 0 else bidLevels[0]
         bestAsk = 'null' if len(askLevels) == 0 else askLevels[0]
         return bestBid, bestAsk
     
     @property
     def bestMarketLimits(self):
-        bidLevels = self.mktOrders[1].keys
-        askLevels = self.mktOrders[0].keys
+        bidLevels = list(self.mktOrders[1].keys())
+        askLevels = list(self.mktOrders[0].keys())
         bestBid = 'null' if len(bidLevels) == 0 else bidLevels[0]
         bestAsk = 'null' if len(askLevels) == 0 else askLevels[0]
         return bestBid, bestAsk
+    
+    @property
+    def aggressingMarketOrder(self):
+        buySideAggressing, sellSideAggressing = False, False
+        mktLimits = self.bestMarketLimits
+        bbo = self.bestBidAsk
+        
+        # check market buy side for fillability
+        if mktLimits[0] > bbo[1]:
+            buySideAggressing = True
+        if mktLimits[1] < bbo[0]:
+            sellSideAggressing = True
+        
 
     def fillOrder(self):
         pass
 
-
+# TESTING:IGNORE
 orders = orderBook('YLLSS', 5)
-orders.postOrder(order('YLLSS', 1, 'Hairo', 'mkt', 100, 10, 1))
-orders.postOrder(order('YLLSS', 3, 'Hairo', 'lim', 92, 10, 1))
+orders.postOrder(order('YLLSS', 1, 'Hairo', 'mkt', 100, -10, 1))
+orders.postOrder(order('YLLSS', 3, 'Hairo', 'lim', 92, -10, 1))
 orders.postOrder(order('YLLSS', 2, 'YCL', 'lim', 80, 10, 2))
 
 #book = orders.mktOrders[1]
 #print(book.side)
 #print(book.type)
-
+print(orders.bestBidAsk)
+print(orders.bestMarketLimits)
 book = orders.mktOrders[1]
-print(book)
+#print(book)
 
                  
