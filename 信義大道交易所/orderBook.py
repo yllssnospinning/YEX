@@ -32,7 +32,12 @@ class orderBook:
         askLevels = list(self.lob[0].keys())
         bestBid = 'null' if len(bidLevels) == 0 else bidLevels[0]
         bestAsk = 'null' if len(askLevels) == 0 else askLevels[0]
-        return bestBid, bestAsk
+        bbTimeQty, baTimeQty = 'null', 'null'
+        if not bestBid == 'null':
+            bbTimeQty = self.lob[1][bestBid].levelRecentTimeQty            
+        if not bestAsk == 'null':
+            baTimeQty = self.lob[0][bestAsk].levelRecentTimeQty
+        return bestBid, bestAsk, bbTimeQty, baTimeQty
     
     @property
     def bestMarketLimits(self):
@@ -40,9 +45,14 @@ class orderBook:
         askLevels = list(self.mktOrders[0].keys())
         bestBid = 'null' if len(bidLevels) == 0 else bidLevels[0]
         bestAsk = 'null' if len(askLevels) == 0 else askLevels[0]
-        return bestBid, bestAsk
-    
+        bbTimeQty, baTimeQty = 'null', 'null'
+        if not bestBid == 'null':
+            bbTimeQty = self.mktOrders[1][bestBid].levelRecentTimeQty            
+        if not bestAsk == 'null':
+            baTimeQty = self.mktOrders[0][bestAsk].levelRecentTimeQty
+        return bestBid, bestAsk, bbTimeQty, baTimeQty
     # TODO
+    
     @property
     def aggressingMarketOrder(self):
         buySideAggressing, sellSideAggressing = False, False
@@ -63,8 +73,9 @@ class orderBook:
 # TESTING:IGNORE
 orders = orderBook('YLLSS', 5)
 orders.postOrder(order('YLLSS', 1, 'Hairo', 'mkt', 100, -10, 1))
-orders.postOrder(order('YLLSS', 3, 'Hairo', 'lim', 92, -10, 1))
-orders.postOrder(order('YLLSS', 2, 'YCL', 'lim', 80, 10, 2))
+orders.postOrder(order('YLLSS', 2, 'Lychee', 'mkt', 100, -30, 2))
+orders.postOrder(order('YLLSS', 3, 'Hairo', 'lim', 92, 100, 1))
+orders.postOrder(order('YLLSS', 4, 'YCL', 'lim', 80, 10, 2))
 
 #book = orders.mktOrders[1]
 #print(book.side)
@@ -73,5 +84,3 @@ print(orders.bestBidAsk)
 print(orders.bestMarketLimits)
 book = orders.mktOrders[1]
 #print(book)
-
-                 
