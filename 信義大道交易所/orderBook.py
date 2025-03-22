@@ -58,23 +58,38 @@ class orderBook:
         buySideAggressing, sellSideAggressing = False, False
         mktLimits = self.bestMarketLimits
         bbo = self.bestBidAsk
-        
         # check market buy side for fillability
-        if mktLimits[0] > bbo[1]:
-            buySideAggressing = True
-        if mktLimits[1] < bbo[0]:
-            sellSideAggressing = True
-        # TODO
+        if not mktLimits[0] == 'null':
+            if mktLimits[0] >= bbo[1]:
+                buySideAggressing = True
+        if not mktLimits[1] == 'null':
+            if mktLimits[1] <= bbo[0]:
+                sellSideAggressing = True
+        if buySideAggressing and sellSideAggressing:
+            if mktLimits[3][0] < mktLimits[4][0]:
+                sellSideAggressing = False
+            else:
+                buySideAggressing = False
+        if buySideAggressing:
+            return 1
+        elif sellSideAggressing:
+            return 0
+        else:
+            return -1
         
+    @property
+    def aggressingLimitOrder(self):
+        buySideAg
 
     def fillOrder(self):
+        #be fast
         pass
 
 # TESTING:IGNORE
 orders = orderBook('YLLSS', 5)
 orders.postOrder(order('YLLSS', 1, 'Hairo', 'mkt', 100, -10, 1))
 orders.postOrder(order('YLLSS', 2, 'Lychee', 'mkt', 100, -30, 2))
-orders.postOrder(order('YLLSS', 3, 'Hairo', 'lim', 92, 100, 1))
+orders.postOrder(order('YLLSS', 3, 'Hairo', 'lim', 100, 100, 1))
 orders.postOrder(order('YLLSS', 4, 'YCL', 'lim', 80, 10, 2))
 
 #book = orders.mktOrders[1]
@@ -82,5 +97,6 @@ orders.postOrder(order('YLLSS', 4, 'YCL', 'lim', 80, 10, 2))
 #print(book.type)
 print(orders.bestBidAsk)
 print(orders.bestMarketLimits)
+print(orders.aggressingMarketOrder)
 book = orders.mktOrders[1]
 #print(book)
