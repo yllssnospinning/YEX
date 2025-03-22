@@ -84,7 +84,9 @@ class orderBook:
         if bbo[0] == 'null' and bbo[1] == 'null':
             return -1
         else:
-            if bbo[1] == 'null':
+            if bbo[0] < bbo[1]:
+                return -1
+            elif bbo[1] == 'null':
                 return 1
             elif bbo[0] == 'null':
                 return 0
@@ -93,8 +95,7 @@ class orderBook:
                 return 1 if buySideAggressing else 0
 
     def fillOrder(self):
-        #be fast
-        pass
+        
 
 # TESTING:IGNORE
 orders = orderBook('YLLSS', 5)
