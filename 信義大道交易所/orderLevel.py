@@ -50,12 +50,14 @@ class orderLevel:
             for i, ii in enumerate(orders):
                 if amountToFill == 0:
                     return []
-                order = orders[ii]
-                orderFillQty = min(order.qty, amountToFill)
+                order = ii
+                print(order.qty, amountToFill)
+                orderFillQty = min(abs(order.qty), amountToFill)
                 if order.qty > 0:
                     order.qty -= orderFillQty
                 else:
                     order.qty += orderFillQty
+                print(orderFillQty)
                 if order.qty == 0:
                     orders.pop(i)
                 amountToFill -= orderFillQty

@@ -71,9 +71,9 @@ class orderBook:
             else:
                 buySideAggressing = False
         if buySideAggressing:
-            return 1
+            return 1, mktLimits[0]
         elif sellSideAggressing:
-            return 0
+            return 0, mktLimits[1]
         else:
             return -1
         
@@ -97,26 +97,30 @@ class orderBook:
     def fillOrder(self):
         while True:
             mktAggressing = self.aggressingMarketOrder
-            if mktAggressing != -1:
-                limitSideToMatch = 1 - mktAggressing
-                
+            if mktAggressing[0] != -1:
+                limitSideToMatch = 1 - mktAggressing[0]
+                mktQtyToFill = self.bestMarketLimits[2 if mktAggressing[0] == 1 else 3][1]
+                while mktQtyToFill > 0:
+                    bbo = self.bestBidAsk
+                    # check for limit order eligibility
+                    if mktAggressing[0] == 1 and bbo[mktAggressing[0]] < mktAggressing[1] or mktAggressing[0] == 0 and bbo[mktAggressing[0]] > mktAggressing[1]:
+                        limQtyFillable = self.bbo[3 if mktAggressing[0] == 1 else 2][1]
+                        maxFillableQty = min(mktQtyToFill, limQtyFillable)
+                        #Filing the orders
+                        mktFilled = self.mktOrders[mktAggressing][mktAggressing[1]].fillOrders(maxFillableQty)
+                        limFilled = self.lob[limitSideToMatch][mktAggressing[1]].fillOrders(maxFillableQty)
+                        
 
 
 # TESTING:IGNORE
 orders = orderBook('YLLSS', 5)
-orders.postOrder(order('YLLSS', 1, 'Hairo', 'mkt', 100, 10, 1))
-orders.postOrder(order('YLLSS', 2, 'Lychee', 'mkt', 100, -30, 2))
-orders.postOrder(order('YLLSS', 3, 'Hairo', 'lim', 100, -100, 1))
-orders.postOrder(order('YLLSS', 4, 'YCL', 'lim', 80, 10, 2))
-orders.postOrder(order('YLLSS', 5, 'Hairo', 'lim', 70, -100, 2))
-orders.postOrder(order('YLLSS', 6, 'YCL', 'lim', 72, -10, 1))
-
+orders.postOrder(order('YLLSS', 3, 'Hairo', 'lim', 100, -100, 2))
+orders.postOrder(order('YLLSS', 4, 'YCL', 'lim', 100, -10, 1))
+#$print(orders.lob[0])
+orders.lob[0][100].fillOrders(10)
 #book = orders.mktOrders[1]
 #print(book.side)
 #print(book.type)
-print(orders.bestBidAsk)
-print(orders.bestMarketLimits)
-print(orders.aggressingMarketOrder)
-print(orders.aggressingLimitOrder)
-book = orders.mktOrders[1]
-#print(book)
+print(orders.lob[0][100].levelRecentTimeQty)
+print(orders.lob[0][100].book)
+#orders.fillOrder()
