@@ -49,7 +49,7 @@ class orderLevel:
             orders = self.book[i]
             for i, ii in enumerate(orders):
                 if amountToFill == 0:
-                    return []
+                    return filledOrders
                 order = ii
                 print(order.qty, amountToFill)
                 orderFillQty = min(abs(order.qty), amountToFill)
