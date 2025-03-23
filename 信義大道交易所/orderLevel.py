@@ -47,12 +47,17 @@ class orderLevel:
         filledOrders = []
         for i in self.book:
             orders = self.book[i]
-            for ii in orders:
+            for i, ii in enumerate(orders):
                 if amountToFill == 0:
                     return []
                 order = orders[ii]
                 orderFillQty = min(order.qty, amountToFill)
-                order.qty -= orderFillQty
+                if order.qty > 0:
+                    order.qty -= orderFillQty
+                else:
+                    order.qty += orderFillQty
+                if order.qty == 0:
+                    orders.pop(i)
                 amountToFill -= orderFillQty
                 filledOrders.append([order.orderID, orderFillQty])
         return filledOrders

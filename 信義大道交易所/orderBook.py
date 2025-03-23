@@ -95,22 +95,28 @@ class orderBook:
                 return 1 if buySideAggressing else 0
 
     def fillOrder(self):
-        
+        while True:
+            mktAggressing = self.aggressingMarketOrder
+            if mktAggressing != -1:
+                limitSideToMatch = 1 - mktAggressing
+                
+
 
 # TESTING:IGNORE
 orders = orderBook('YLLSS', 5)
-#orders.postOrder(order('YLLSS', 1, 'Hairo', 'mkt', 100, -10, 1))
-#orders.postOrder(order('YLLSS', 2, 'Lychee', 'mkt', 100, -30, 2))
-orders.postOrder(order('YLLSS', 3, 'Hairo', 'lim', 100, 100, 1))
+orders.postOrder(order('YLLSS', 1, 'Hairo', 'mkt', 100, 10, 1))
+orders.postOrder(order('YLLSS', 2, 'Lychee', 'mkt', 100, -30, 2))
+orders.postOrder(order('YLLSS', 3, 'Hairo', 'lim', 100, -100, 1))
 orders.postOrder(order('YLLSS', 4, 'YCL', 'lim', 80, 10, 2))
-orders.postOrder(order('YLLSS', 5, 'Hairo', 'lim', 100, -100, 1))
-orders.postOrder(order('YLLSS', 6, 'YCL', 'lim', 80, -10, 2))
+orders.postOrder(order('YLLSS', 5, 'Hairo', 'lim', 70, -100, 2))
+orders.postOrder(order('YLLSS', 6, 'YCL', 'lim', 72, -10, 1))
 
 #book = orders.mktOrders[1]
 #print(book.side)
 #print(book.type)
 print(orders.bestBidAsk)
 print(orders.bestMarketLimits)
+print(orders.aggressingMarketOrder)
 print(orders.aggressingLimitOrder)
 book = orders.mktOrders[1]
 #print(book)
