@@ -29,27 +29,44 @@ class limitBook:
                 self.book[order.price].postOrder(order)
                 self.sortBook()
                 
-    def fillOrder(self, incomingOrder):
+    def fillOrders(self, incomingOrder):
         order = incomingOrder
         qtyToFill = incomingOrder.qty
-        fills = []
+        print('to fill', qtyToFill)
+        totalFilledQty = 0
+        fills = {}
         for priceLevel in self.book:
-            if incomingOrder.type == 1 and priceLevel > incomingOrder.price or incomingOrder.type == 0 and priceLevel < incomingOrder.price:
+            print(priceLevel, incomingOrder.price, incomingOrder.type)
+            if incomingOrder.side == 1 and priceLevel > incomingOrder.price or incomingOrder.side == 0 and priceLevel < incomingOrder.price:
+                print('break')
                 break
-            fills = self.book[self.bestPrice].fillOrders(qtyToFill, incomingOrder.traderID)
+            fill = self.book[priceLevel].fillOrders(qtyToFill, order.traderID)
+            fills[priceLevel] = fill[0]
+            totalFilledQty += fill[1]
+            qtyToFill -= fill[1]
+        return fills, totalFilledQty
+
     
     def sortBook(self):
         self.book = {i:self.book[i] for i in sorted(list(self.book.keys()), reverse=self.side == 1)}
         
     @property
     def bestPriceTime(self):
-        bestPrice = list(self.book.keys())[0]
+        try:
+            bestPrice = list(self.book.keys())[0]
+        except:
+            return 'null', 'null'
         bpLevel = self.book[bestPrice]
         time = bpLevel.levelRecentTimeQty(True)
         return bestPrice, time
 
-book = limitBook('HairoCoin', 0, 'lim', 5)
-book.postOrder(order('HairoCoin', 1, 'Hairo', 'lim', 99, 10, 1))
-book.postOrder(order('HairoCoin', 2, 'YCL', 'lim', 95, 95, 0))
-print(book.bestPriceTime)
+book = limitBook('HairoCoin', 1, 'lim', 5)
+book.postOrder(order('HairoCoin', 1, 'Hairo', 'lim', 100, 10, 1))
+book.postOrder(order('HairoCoin', 2, 'YCL', 'lim', 100, 90, 0))
+book.postOrder(order('HairoCoin', 3, 'Chlochlonut', 'lim', 95, 10, 2))
+book.postOrder(order('HairoCoin', 4, 'Miss_LBL', 'lim', 80, 90, 2))
+incoming = order('HairoCoin', 3, 'Lychee', 'lim', 80, -1000, 0)
+print(incoming.side)
+print(book.fillOrders(incoming))
+#print(book.bestPriceTime)
     

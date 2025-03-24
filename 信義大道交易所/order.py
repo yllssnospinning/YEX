@@ -9,6 +9,6 @@ class Order:
 
         self.side = 1 if qty > 0 else 0
 
-        self.qty = float(qty)
+        self.qty = abs(float(qty))
         self.prio = priority
 
