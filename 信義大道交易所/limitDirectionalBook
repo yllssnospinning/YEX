@@ -1,0 +1,55 @@
+from orderLevel import orderLevel as level
+from order import Order as order
+
+class limitBook:
+    def __init__(self, instrumentName, side, type, tickSize):
+        self.insName = str(instrumentName)
+        self.side = int(side)
+        self.type = str(type)
+        self.tickSize = float(tickSize)
+        self.book = {}
+    
+    def convertPriceLevel(self, price):
+        if price % self.tickSize != 0:
+            newPrice = round(price / self.tickSize) * self.tickSize
+            return newPrice
+        else:
+            return price
+    
+    def postOrder(self, order):
+        rightInstrument = order.instrumentID == self.insName
+        rightSide = order.side == self.side
+        rightType = order.type == self.type
+        if rightInstrument and rightSide and rightType:
+            order.price = self.convertPriceLevel(order.price)
+            if order.price in self.book:
+                self.book[order.price].postOrder(order)
+            else:
+                self.book[order.price] = level(self.insName)
+                self.book[order.price].postOrder(order)
+                self.sortBook()
+                
+    def fillOrder(self, incomingOrder):
+        order = incomingOrder
+        qtyToFill = incomingOrder.qty
+        fills = []
+        for priceLevel in self.book:
+            if incomingOrder.type == 1 and priceLevel > incomingOrder.price or incomingOrder.type == 0 and priceLevel < incomingOrder.price:
+                break
+            fills = self.book[self.bestPrice].fillOrders(qtyToFill)
+    
+    def sortBook(self):
+        self.book = {i:self.book[i] for i in sorted(list(self.book.keys()), reverse=self.side == 1)}
+        
+    @property
+    def bestPriceTime(self):
+        bestPrice = list(self.book.keys())[0]
+        bpLevel = self.book[bestPrice]
+        time = bpLevel.levelRecentTimeQty(True)
+        return bestPrice, time
+
+book = limitBook('HairoCoin', 0, 'lim', 5)
+book.postOrder(order('HairoCoin', 1, 'Hairo', 'lim', 99, 10, 1))
+book.postOrder(order('HairoCoin', 2, 'YCL', 'lim', 95, 95, 0))
+print(book.bestPriceTime)
+    
