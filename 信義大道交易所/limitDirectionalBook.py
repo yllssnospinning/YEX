@@ -36,7 +36,7 @@ class limitBook:
         for priceLevel in self.book:
             if incomingOrder.type == 1 and priceLevel > incomingOrder.price or incomingOrder.type == 0 and priceLevel < incomingOrder.price:
                 break
-            fills = self.book[self.bestPrice].fillOrders(qtyToFill)
+            fills = self.book[self.bestPrice].fillOrders(qtyToFill, incomingOrder.traderID)
     
     def sortBook(self):
         self.book = {i:self.book[i] for i in sorted(list(self.book.keys()), reverse=self.side == 1)}
