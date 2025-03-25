@@ -52,8 +52,10 @@ class orderLevel:
                     totalFilledQty += orderFillQty
                     amountToFill -= orderFillQty
                     if order.qty == 0:
-                        filledOrders.append([order.orderID, orderFillQty])
                         removedOrder.append(index)
+                    filledOrders.append([order.orderID, orderFillQty])
+                    if amountToFill == 0:
+                        break
             # print(removedOrder)
             for i, ii in enumerate(removedOrder):
                 orders.pop(ii - i)

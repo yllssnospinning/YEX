@@ -32,13 +32,11 @@ class limitBook:
     def fillOrders(self, incomingOrder):
         order = incomingOrder
         qtyToFill = incomingOrder.qty
-        print('to fill', qtyToFill)
         totalFilledQty = 0
         fills = {}
         for priceLevel in self.book:
             print(priceLevel, incomingOrder.price, incomingOrder.type)
             if incomingOrder.side == 1 and priceLevel > incomingOrder.price or incomingOrder.side == 0 and priceLevel < incomingOrder.price:
-                print('break')
                 break
             fill = self.book[priceLevel].fillOrders(qtyToFill, order.traderID)
             fills[priceLevel] = fill[0]
@@ -63,11 +61,11 @@ class limitBook:
 # TODO: Remove orderLevel if all orders in it are filled    
 def testBook():
     book = limitBook('HairoCoin', 1, 'lim', 5)
-    book.postOrder(order('HairoCoin', 1, 'Hairo', 'lim', 100, 10, 1))
+    book.postOrder(order('HairoCoin', 1, 'Hairo', 'lim', 100, 20, 1))
     book.postOrder(order('HairoCoin', 2, 'YCL', 'lim', 100, 90, 0))
-    book.postOrder(order('HairoCoin', 3, 'Chlochlonut', 'lim', 90, 10, 2))
+    book.postOrder(order('HairoCoin', 3, 'Chlochlonut', 'lim', 100, 10, 1))
     book.postOrder(order('HairoCoin', 4, 'Miss_LBL', 'lim', 80, 90, 2))
-    incoming = order('HairoCoin', 3, 'Lychee', 'lim', 95, -99.99, 0)
+    incoming = order('HairoCoin', 3, 'Lychee', 'lim', 110, -105, 0)
     #print(incoming.side)
     print(book.fillOrders(incoming))
     print(book.book[100].levelRecentTimeQty(False))
