@@ -30,11 +30,12 @@ class orderLevel:
                 order = ii
                 if recentTime == -1:
                     recentTime = order.orderID
+                    bestOrder = order
                     if timeOnly:
-                        return recentTime
+                        return recentTime, bestOrder
                 totalQty += abs(order.qty)
-        return recentTime, totalQty
-    
+        return recentTime, totalQty, bestOrder
+
     def fillOrders(self, qty, incomingOrderName):
         amountToFill = qty
         filledOrders = []

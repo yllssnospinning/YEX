@@ -55,19 +55,22 @@ class limitBook:
         try:
             bestPrice = list(self.book.keys())[0]
         except:
-            return 'null', 'null'
+            return 'null'
         bpLevel = self.book[bestPrice]
         time = bpLevel.levelRecentTimeQty(True)
-        return bestPrice, time
+        return bestPrice, time[0], time[1] 
     
+# TODO: Remove orderLevel if all orders in it are filled    
 def testBook():
     book = limitBook('HairoCoin', 1, 'lim', 5)
     book.postOrder(order('HairoCoin', 1, 'Hairo', 'lim', 100, 10, 1))
     book.postOrder(order('HairoCoin', 2, 'YCL', 'lim', 100, 90, 0))
     book.postOrder(order('HairoCoin', 3, 'Chlochlonut', 'lim', 90, 10, 2))
     book.postOrder(order('HairoCoin', 4, 'Miss_LBL', 'lim', 80, 90, 2))
-    incoming = order('HairoCoin', 3, 'Lychee', 'lim', 95, -1000, 0)
+    incoming = order('HairoCoin', 3, 'Lychee', 'mkt', 95, -100, 0)
     print(incoming.side)
     print(book.fillOrders(incoming))
+    print(book.book)
 #print(book.bestPriceTime)
-    
+testBook()
+
