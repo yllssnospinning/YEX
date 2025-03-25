@@ -67,10 +67,10 @@ def testBook():
     book.postOrder(order('HairoCoin', 2, 'YCL', 'lim', 100, 90, 0))
     book.postOrder(order('HairoCoin', 3, 'Chlochlonut', 'lim', 90, 10, 2))
     book.postOrder(order('HairoCoin', 4, 'Miss_LBL', 'lim', 80, 90, 2))
-    incoming = order('HairoCoin', 3, 'Lychee', 'mkt', 95, -100, 0)
-    print(incoming.side)
+    incoming = order('HairoCoin', 3, 'Lychee', 'lim', 95, -99.99, 0)
+    #print(incoming.side)
     print(book.fillOrders(incoming))
-    print(book.book)
+    print(book.book[100].levelRecentTimeQty(False))
 #print(book.bestPriceTime)
 testBook()
 

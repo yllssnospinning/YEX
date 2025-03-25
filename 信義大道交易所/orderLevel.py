@@ -24,10 +24,12 @@ class orderLevel:
     def levelRecentTimeQty(self, timeOnly):
         # timeOnly = True
         recentTime, totalQty = -1, 0
+        bestOrder = 'null'
         for i in self.book:
             orders = self.book[i]
             for ii in orders:
                 order = ii
+                print(order.qty)
                 if recentTime == -1:
                     recentTime = order.orderID
                     bestOrder = order
@@ -49,7 +51,7 @@ class orderLevel:
                     order.qty -= orderFillQty
                     totalFilledQty += orderFillQty
                     amountToFill -= orderFillQty
-                    if orderFillQty != 0:
+                    if order.qty == 0:
                         filledOrders.append([order.orderID, orderFillQty])
                         removedOrder.append(index)
             # print(removedOrder)
