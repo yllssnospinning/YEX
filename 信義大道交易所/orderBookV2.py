@@ -21,8 +21,9 @@ class orderBook:
         mBidSidePriceTime = self.mktStops[1].bestPriceTime()
         mAskSidePriceTime = self.mktStops[0].bestPriceTime()
         mktBidAggressing, mktAskAggressing = False, False
-        
-        if mBidSidePriceTime[0] > askSidePriceTime[0]:
+        if mBidSidePriceTime == 'null' and mAskSidePriceTime == 'null':
+            pass
+        elif mAskSidePriceTime == 'null':
             mktBidAggressing = True
         if mAskSidePriceTime[0] < bidSidePriceTime[0]:
             mktAskAggressing = True
