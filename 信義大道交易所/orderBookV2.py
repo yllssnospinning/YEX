@@ -25,26 +25,42 @@ class orderBook:
             pass
         elif mAskSidePriceTime == 'null':
             mktBidAggressing = True
-        if mAskSidePriceTime[0] < bidSidePriceTime[0]:
+        elif mktBidAggressing == 'null':
             mktAskAggressing = True
+        else:
+            if mBidSidePriceTime[0] > askSidePriceTime[0]:
+                mktBidAggressing = True
+            if mAskSidePriceTime[0] < bidSidePriceTime[0]:
+                mktAskAggressing = True
         if mktBidAggressing and mktAskAggressing:
             return 1, mBidSidePriceTime[2] if mBidSidePriceTime[1] < mAskSidePriceTime[1] else 0, mAskSidePriceTime[2]
         else:
             if mktBidAggressing:
-                return 1, mBidSidePriceTime[2]
+                return 1, mBidSidePriceTime[2], 'mkt'
             if mktAskAggressing:
-                return 0, mAskSidePriceTime[2]
-            else:
-                return -1, 'null'
+                return 0, mAskSidePriceTime[2], 'mkt'
         
-        if bidSidePriceTime[0] < askSidePriceTime[0]:
+        bidAggressing, askAggressing = False, False
+        if bidSidePriceTime == 'null' and askSidePriceTime == 'null':
+            return 'null'
+        if bidSidePriceTime == 'null':
+            askAggresing = True
+        elif askSidePriceTime == 'null':
+            bidAggressing = True
+        # no limit side being null
+        elif bidSidePriceTime[0] < askSidePriceTime[0]:
             # There are no pair(s) of limit orders which can be filled
-            return -1, 'allNull'
+            pass
         # Bid side contains aggressing orders if its best order is placed earlier than that of the ask side, and vice versa
         if bidSidePriceTime[1] < askSidePriceTime[1]:
-            return 1, bidSidePriceTime[2]
+            bidAggressing = True
         else:
-            return 0, askSidePriceTime[2]
+            askAggressing = True
+        if bidAggressing:
+            return 1, bidSidePriceTime[2], 'lim'
+        if askAggressing:
+            return 0, askSidePriceTime[2], 'lim'
+        return 'null'
     
     def matchOrders(self):
         matches = []
@@ -60,6 +76,7 @@ class orderBook:
                 orderToMatch = aggressingOrder[1]
                 fills = self.limits[sideToMatch].fillOrders(incomingOrder=orderToMatch)
                 matches.append([orderToMatch.orderID, fills])
-            if aggressingOrder[1] == 'allNull':
+            if aggressingOrder == 'null':
                 break
+        return matches
             

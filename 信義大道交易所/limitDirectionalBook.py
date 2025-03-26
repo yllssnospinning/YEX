@@ -48,7 +48,6 @@ class limitBook:
     def sortBook(self):
         self.book = {i:self.book[i] for i in sorted(list(self.book.keys()), reverse=self.side == 1)}
         
-    @property
     def bestPriceTime(self):
         try:
             bestPrice = list(self.book.keys())[0]
@@ -65,10 +64,10 @@ def testBook():
     book.postOrder(order('HairoCoin', 2, 'YCL', 'lim', 100, 90, 0))
     book.postOrder(order('HairoCoin', 3, 'Chlochlonut', 'lim', 100, 10, 1))
     book.postOrder(order('HairoCoin', 4, 'Miss_LBL', 'lim', 80, 90, 2))
-    incoming = order('HairoCoin', 3, 'Lychee', 'lim', 110, -105, 0)
+    incoming = order('HairoCoin', 3, 'Lychee', 'lim', 75, -200, 0)
     #print(incoming.side)
     print(book.fillOrders(incoming))
-    print(book.book[100].levelRecentTimeQty(False))
+    print(book.book[80].levelRecentTimeQty(False))
 #print(book.bestPriceTime)
 testBook()
 
