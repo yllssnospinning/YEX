@@ -4,6 +4,8 @@ class Order:
         self.traderID = str(traderID)
         self.instrumentID = instrumentID
 
+        self.base, self.quote = self.instrumentID.split('/')
+
         self.type = type
         self.price = float(price)
 
@@ -12,3 +14,4 @@ class Order:
         self.qty = abs(float(qty))
         self.prio = priority
 
+        self.totCost = self.price * self.qty
