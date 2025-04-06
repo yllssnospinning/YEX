@@ -1,0 +1,51 @@
+from order import order
+
+class accountFileIO:
+    def __init__(self, fileName):
+        self.fileNameToUse = str(fileName)
+    
+    def readFile(self):
+        f = open(self.fileNameToUse)
+        lines = []
+        for i in f:
+            lines.append(i.rstrip('\n'))                                                                      
+        return lines
+        
+    def loadOrderData(self, line, acctName):
+        orders = line.split(' | ')
+        ordersLis = []
+        temp = []
+        for i in orders:
+            temp = i.split()
+            temp = order(temp[0], acctName, temp[1], temp[2], temp[3], temp[4])
+            ordersLis.append(temp)
+        return ordersLis
+            
+    def loadAssetData(self, line):
+        assets = line.split()
+        assetsDict = {}
+        for i, ii in enumerate(assets):
+            if i % 2 == 0:
+                assetsDict[ii] = float(assets[i + 1])
+        return assetsDict
+           
+    def readLines(self, lines):
+        accounts = {}
+        acctName = ''
+        assets = {}
+        orders = []
+        for i, line in enumerate(lines):
+            lineNo = i + 1
+            if lineNo % 3 == 0:
+                orders = self.loadOrderData(line, acctName)
+                accounts[acctName] = {'assets':assets, 'orders':orders}
+            elif lineNo % 2 == 0:
+                assets = self.loadAssetData(line)
+            else:
+                acctName = line
+        return accounts
+                
+    
+reader = accountFileIO('accounts.txt')
+lines = reader.readFile()
+print(reader.readLines(lines))
