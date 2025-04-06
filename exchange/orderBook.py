@@ -16,6 +16,19 @@ class orderBook(self):
         if not bestMktBuy is None and bestMktSell is None:
             if bestLimSell is None:
                 mktBuyAggressing = False
+            elif bestLimSell.price > bestMktBuy.price:
+                mktBuyAggressing = False
             if bestLimBuy is None:
                 mktSellAggressing = False
-            
+            elif bestLimBuy.price < bestMktSell.price:
+                mktSellAggressing = False
+        if not mktBuyAggressing == False and mktSellAggressing == False:
+            if mktBuyAggressing and mktSellAggressing:
+                return bestMktBuy if bestMktBuy.orderID < bestMktSell.orderID else bestMktSell
+            elif mktBuyAggressing:
+                return mktBuyAggressing
+            else:
+                return mktSellAggressing
+        
+        if bestLimBuy.price > bestLimSell.price:
+            return bestLimBuy if bestLimBuy.orderID < bestLimSell.orderID else bestLimSell
