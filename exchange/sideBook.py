@@ -1,4 +1,4 @@
-class sideBook(self):
+class sideBook:
     def __init__(self, orderType, orderSide):
         self.type = str(orderType), str(orderSide)
         self.book = {}
@@ -10,18 +10,19 @@ class sideBook(self):
             self.book[order.price].append(order)
 
     def fillBestOrder(self, qty):
-        
+        pass
             
-    @property
-    def bestOrder(self)
+    def bestOrder(self, traderID):
         priceLevels = list(self.book.keys())
-        if len(priceLevel) == 0:
+        if len(priceLevels) == 0:
             return None
         else:
-            order = self.book[priceLevels[0]][0]
-            return order
-            
-        
+            for price in self.book:
+                level = self.book[price]
+                for order in level:
+                    if not order.traderID == traderID:
+                        return order
+                    
     def fillOrders(self, incomingOrder):
         inc = incomingOrder
         totalFillQty = 0
@@ -30,10 +31,11 @@ class sideBook(self):
         lastBestPrice, canFill = 0, False
         while True:
             priceLevels = list(self.book.keys())
-            bestPrice = priceLevel[0] if len(priceLevel) > 0 else 'null'
+            bestPrice = priceLevels[0] if len(priceLevels) > 0 else 'null'
             if not lastBestPrice == bestPrice:
                 canFill = incomingOrder.side == 'B' and bestPrice < incomingOrder.price or incomingOrder.side == 'S' and bestPrice > incomingOrder.price
-            canFill = False if inc.qty == 0
+            if inc.qty == 0:
+                canFill = False 
             if canFill:
                 priceLevel = self.book[bestPrice]
                 orderToFill = priceLevel[0]
@@ -42,7 +44,7 @@ class sideBook(self):
                 inc.qty -= maxFillQty
                 totalFillQty += maxFillQty
                 fillPrice = 0
-                if incomingOrder.type = 'mktStop':
+                if incomingOrder.type == 'mktStop':
                     fillPrice = orderToFill.price
                 else:
                     fillPrice = incomingOrder.price if incomingOrder.orderID < orderToFill.orderID else orderToFill.price
@@ -54,7 +56,7 @@ class sideBook(self):
                         del self.book[bestPrice]
             else:
                 break
-            
-        fills.append([orderToFill.orderID, totalFillAmount / totalFillQty, maxFillQty])
+        if totalFillQty != 0:
+            fills.append([incomingOrder.orderID, totalFillAmount / totalFillQty, maxFillQty])
         return fills
              
