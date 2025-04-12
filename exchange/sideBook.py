@@ -51,6 +51,7 @@ class sideBook(self):
                         del self.book[bestPrice]
             else:
                 break
+            
         fills.append([orderToFill.orderID, totalFillAmount / totalFillQty, maxFillQty])
         return fills
              

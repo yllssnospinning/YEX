@@ -32,3 +32,18 @@ class orderBook(self):
         
         if bestLimBuy.price > bestLimSell.price:
             return bestLimBuy if bestLimBuy.orderID < bestLimSell.orderID else bestLimSell
+
+    def fillOrders(self):
+        totalFills = []
+        while True:
+            aggressingOrder = self.getAggressingOrder()
+            if aggressingOrder is None:
+                break
+            fills = []
+            if aggressingOrder.side = 'B':
+                fills = self.lSell.fillOrders(incomingOrder=aggressingOrder)
+            else:
+                fills = self.lBuy.fillOrders(incomingOrder=aggressingOrder)
+            totalFills.extend(fills)
+            
+            
