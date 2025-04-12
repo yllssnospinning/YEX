@@ -7,6 +7,18 @@ class orderBook(self):
         self.lBuy = sideBook('lim', 1)
         self.lSell = sideBook('lim', 0)
         
+    def addOrder(self, order):
+        if order.side = 'B':
+            if order.type = 'mktStop':
+                self.mBuy.append(order)
+            else:
+                self.lBuy.append(order)
+        else:
+            if order.type = 'mktStop':
+                self.mBuy.append(order)
+            else:
+                self.lBuy.append(order)
+        
     def getAggressingOrder(self):
         mktBuyAggressing, mktSellAggressing = True, True
         bestMktBuy = self.mBuy.bestOrder

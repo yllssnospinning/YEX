@@ -8,6 +8,9 @@ class sideBook(self):
             self.book[order.price] = [order]
         else:
             self.book[order.price].append(order)
+
+    def fillBestOrder(self, qty):
+        
             
     @property
     def bestOrder(self)
