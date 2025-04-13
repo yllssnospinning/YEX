@@ -56,31 +56,42 @@ class orderBook:
             return bestLimBuy
         if limSellAggressing:
             return bestLimSell
-        
+    
+    
     def fillOrders(self):
         totalFills = []
         while True:
             aggressingOrder = self.getAggressingOrder()
-            print(aggressingOrder)
             if aggressingOrder is None:
                 break
+            print(aggressingOrder.side, aggressingOrder.type, aggressingOrder.price, aggressingOrder.qty)
             fills = []
-            print(aggressingOrder)
             if aggressingOrder.side == 'B':
                 fills = self.lSell.fillOrders(incomingOrder=aggressingOrder)
                 print('fill Buy')
+                if aggressingOrder.type == 'lim':
+                    self.lBuy.fillBestOrder(qty=fills[1][2])
+                else:
+                    self.mBuy.fillBestOrder(qty=fills[1][2])
             else:
                 print('fill Sell')
                 fills = self.lBuy.fillOrders(incomingOrder=aggressingOrder)
-            print(fills)
+                if aggressingOrder.type == 'lim':
+                    self.lSell.fillBestOrder(qty=fills[1][2])
+                else:
+                    self.mSell.fillBestOrder(qty=fills[1][2])
+            #print(fills)
             totalFills.extend(fills)
         return totalFills
+            
 
 book = orderBook('HAIRO/YNT', 1)
 book.addOrder(Order(instrumentID='HAIRO/YNT', orderID=1, traderID='Hairo', type='lim', price=100,qty=10))
 book.addOrder(Order(instrumentID='HAIRO/YNT', orderID=2, traderID='Tikey', type='lim', price=99, qty=15))
 book.addOrder(Order(instrumentID='HAIRO/YNT', orderID=3, traderID='Lychee', type='lim', price=99, qty=2))
-book.addOrder(Order(instrumentID='HAIRO/YNT', orderID=4, traderID='Bosco', type='mktStop', price=12, qty=-16))
+book.addOrder(Order(instrumentID='HAIRO/YNT', orderID=5, traderID='Bosco', type='lim', price=75, qty=-5))
+book.addOrder(Order(instrumentID='HAIRO/YNT', orderID=4, traderID='Bosco', type='lim', price=80, qty=-16))
 print(book.fillOrders())
+#book.mSell.fillBestOrder(16)
 #print(book.lBuy.fillOrders(Order(instrumentID='HAIRO/YNT', orderID=4, traderID='Bosco', type='mktStop', price=12, qty=-16)))
-print(book.lBuy.book)
+print(book.mSell.book)
